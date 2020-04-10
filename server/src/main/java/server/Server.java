@@ -28,7 +28,7 @@ public class Server {
         ServerSocket server = null;
         Socket socket = null;
 
-        ExecutorService service = Executors.newCachedThreadPool();
+        ExecutorService service = Executors.newCachedThreadPool();        // Создаем тредпул, емкость по умолчанию
 
         try {
             server = new ServerSocket(8189);
@@ -39,7 +39,7 @@ public class Server {
                 System.out.println("Клиент подключился");
 
                 ClientHandler ch = new ClientHandler(socket, this);
-                service.submit(ch.t);
+                service.submit(ch.t);                                      // Стартуем поток из обработчика клиентов
             }
 
         } catch (IOException e) {
@@ -48,6 +48,7 @@ public class Server {
             SQLHandler.disconnect();
 
             try {
+                service.shutdown();                                   // Чуть не забыл вырубить (Хотя сервер все равно не вырубается, цикл бесконечный)
                 server.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,14 +84,14 @@ public class Server {
 
 
     public void subscribe(ClientHandler clientHandler) {
-        synchronized (clients) {
+        synchronized (clients) {                         // Этот метод изменяет список клиентов, во избежание коллизий синхронизируем
             clients.add(clientHandler);
             broadcastClientList();
         }
     }
 
     public void unsubscribe(ClientHandler clientHandler) {
-        synchronized (clients) {
+        synchronized (clients) {                         // Аналогично, удаление из списка тоже синхронизируем
             clients.remove(clientHandler);
             broadcastClientList();
         }

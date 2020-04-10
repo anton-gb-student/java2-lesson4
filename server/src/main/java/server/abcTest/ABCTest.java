@@ -3,7 +3,7 @@ package server.abcTest;
 public class ABCTest {
 
     public volatile char manager = 'A';
-    public volatile int y;
+    public volatile int y;                  // Сделал y общим, но этого оказалось недостаточно
 
     public synchronized void abc_method (char x) {
         try {
@@ -11,7 +11,7 @@ public class ABCTest {
                 y = (manager % x) % 3;
                 while (y != 0) {
                     wait();
-                    y = (manager % x) % 3;
+                    y = (manager % x) % 3;  // Пришлось делать так, иначе после пробуждения y оставался прежним
                 }
                 String str = ((Character) x).toString();
                 System.out.print(str);
