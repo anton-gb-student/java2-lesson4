@@ -16,7 +16,7 @@ public class ClientHandler {
     private String nick;
     private String login;
 
-    Thread t;
+    Thread t;                                             // Добавил ссылку на поток
 
     public ClientHandler(Socket socket, Server server) {
         try {
@@ -26,7 +26,7 @@ public class ClientHandler {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-            t = new Thread(() -> {
+            t = new Thread(() -> {                         // Инициализировал
                 try {
                     socket.setSoTimeout(120000);
 
@@ -128,7 +128,7 @@ public class ClientHandler {
                         e.printStackTrace();
                     }
                 }
-            });
+            });                                             // Здесь убрал старт, стартовать будет из сервера
         } catch (IOException e) {
             e.printStackTrace();
         }
